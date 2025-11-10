@@ -1,4 +1,12 @@
-// Seletores do DOM
+/**
+ * @fileoverview Script responsável por buscar e exibir informações meteorológicas
+ * utilizando a API Open-Meteo, com base na cidade informada pelo usuário.
+ *
+ * Este módulo manipula o DOM, trata exceções, alterna temas (dia/noite) e exibe
+ * mensagens amigáveis. É parte integrante do aplicativo de clima.
+ */
+
+// === SELETORES DO DOM ===
 const form = document.getElementById("search-form");
 const input = document.getElementById("city-input");
 const result = document.getElementById("result");
@@ -8,24 +16,22 @@ const cityNameEl = document.getElementById("city-name");
 const homeBtn = document.getElementById("home-btn");
 const title = document.getElementById("title");
 
-// Descrição, ícone e data
-let weatherDescEl = document.createElement("p");
-weatherDescEl.id = "weather-description";
-weatherDescEl.style.margin = "6px 0";
-weatherDescEl.style.fontSize = "0.95rem";
-weatherDescEl.style.color = "#475569";
+// === ELEMENTOS DINÂMICOS ===
+const weatherDescEl = document.createElement("p");
+const dateEl = document.createElement("p");
 
-let dateEl = document.createElement("p");
+weatherDescEl.id = "weather-description";
 dateEl.id = "weather-date";
-dateEl.style.fontSize = "0.85rem";
-dateEl.style.color = "#64748b";
 
 cityNameEl.insertAdjacentElement("afterend", weatherDescEl);
 weatherDescEl.insertAdjacentElement("afterend", dateEl);
 
 // === FUNÇÕES AUXILIARES ===
 
-// Formatar data e hora em formato longo (ex: segunda-feira, 13 de outubro de 2025)
+/**
+ * Retorna a data atual formatada em português.
+ * @returns {string} Data formatada no estilo "segunda-feira, 10 de novembro de 2025".
+ */
 function formatarDataHora() {
     const agora = new Date();
     const opcoes = {
@@ -37,10 +43,14 @@ function formatarDataHora() {
     return agora.toLocaleDateString("pt-BR", opcoes);
 }
 
-// Determinar ícone de acordo com código de clima do Open-Meteo
+/**
+ * Retorna o nome do ícone de clima com base no código fornecido pela API Open-Meteo.
+ * @param {number} code - Código do clima retornado pela API.
+ * @returns {string} Nome da classe de ícone (ex: "wi-day-cloudy").
+ */
 function getWeatherIcon(code) {
     const map = {
-        0: "wi-day-sunny", // claro
+        0: "wi-day-sunny",
         1: "wi-day-sunny-overcast",
         2: "wi-day-cloudy",
         3: "wi-cloudy",
@@ -57,7 +67,11 @@ function getWeatherIcon(code) {
     return map[code] || "wi-na";
 }
 
-// Determinar descrição textual do clima
+/**
+ * Retorna a descrição textual correspondente ao código meteorológico.
+ * @param {number} code - Código do clima retornado pela API.
+ * @returns {string} Descrição legível do clima.
+ */
 function getWeatherDescription(code) {
     const map = {
         0: "Céu limpo",
@@ -77,80 +91,111 @@ function getWeatherDescription(code) {
     return map[code] || "Tempo desconhecido";
 }
 
-// Alternar modo dia/noite
+/**
+ * Alterna o tema visual (modo dia/noite) de acordo com o horário local.
+ * @example definirTemaDiaNoite();
+ */
 function definirTemaDiaNoite() {
     const hora = new Date().getHours();
     const body = document.body;
-    if (hora >= 18 || hora < 6) {
-        // noite
-        body.style.background = "linear-gradient(to bottom, #0f172a, #1e293b)";
+    const isNight = hora >= 18 || hora < 6;
+    body.style.background = isNight
+        ? "linear-gradient(to bottom, #0f172a, #1e293b)"
+        : "linear-gradient(to bottom, #9ddaf7, #d9f0ff)";
+}
+
+/**
+ * Exibe mensagens para o usuário, incluindo erros e status.
+ * @param {string} text - Texto da mensagem a ser exibida.
+ * @param {boolean} [isError=false] - Define se a mensagem é de erro.
+ * @example showMessage("Cidade não encontrada.", true);
+ */
+function showMessage(text, isError = false) {
+    message.textContent = text;
+    if (!text) {
+        message.classList.add("hidden");
     } else {
-        // dia
-        body.style.background = "linear-gradient(to bottom, #9ddaf7, #d9f0ff)";
+        message.classList.remove("hidden");
+        message.classList.toggle("error", isError);
     }
 }
 
-// === REQUISIÇÃO PRINCIPAL ===
+// === FUNÇÃO PRINCIPAL ===
+
+/**
+ * Lida com o evento de envio do formulário de pesquisa e busca os dados meteorológicos.
+ * Inclui tratamento de exceções, feedback visual e alternância de telas.
+ *
+ * @async
+ * @function handleCitySearch
+ * @param {SubmitEvent} e - Evento de envio do formulário.
+ * @throws {Error} Quando ocorre falha na API ou a cidade não é encontrada.
+ */
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const city = input.value.trim();
+
     if (!city) return showMessage("Por favor, digite o nome de uma cidade.", true);
 
     showMessage("Buscando...");
     result.classList.add("hidden");
 
     try {
-        // Obter latitude e longitude
+        // === GEOLOCALIZAÇÃO ===
         const geoResp = await fetch(
-            `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=pt&format=json`
+            `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(
+                city
+            )}&count=1&language=pt&format=json`
         );
-        if (!geoResp.ok) throw new Error("Erro na requisição de localização");
+
+        if (!geoResp.ok) throw new Error("Erro na requisição de localização.");
 
         const geoData = await geoResp.json();
-        if (!geoData.results || geoData.results.length === 0) {
-            showMessage("Cidade não encontrada. Tente novamente.", true);
-            return;
-        }
+        if (!geoData.results?.length)
+            return showMessage("Cidade não encontrada. Tente novamente.", true);
 
-        const place = geoData.results[0];
-        const lat = place.latitude;
-        const lon = place.longitude;
+        const { latitude, longitude, name, country } = geoData.results[0];
 
-        // Buscar clima atual
+        // === CLIMA ATUAL ===
         const weatherResp = await fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`
+            `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`
         );
-        if (!weatherResp.ok) throw new Error("Erro ao obter clima");
+
+        if (!weatherResp.ok) throw new Error("Erro ao obter dados meteorológicos.");
 
         const weatherData = await weatherResp.json();
         const weather = weatherData.current_weather;
 
-        if (!weather) {
-            showMessage("Dados meteorológicos indisponíveis.", true);
-            return;
-        }
+        if (!weather)
+            return showMessage("Dados meteorológicos indisponíveis.", true);
 
-        // Exibir dados
-        tempEl.innerHTML = `<i class="wi ${getWeatherIcon(weather.weathercode)}"></i> ${Math.round(weather.temperature)}°`;
-        cityNameEl.textContent = `${place.name}, ${place.country}`;
+        // === EXIBIÇÃO ===
+        tempEl.innerHTML = `<i class="wi ${getWeatherIcon(
+            weather.weathercode
+        )}"></i> ${Math.round(weather.temperature)}°`;
+        cityNameEl.textContent = `${name}, ${country}`;
         weatherDescEl.textContent = getWeatherDescription(weather.weathercode);
         dateEl.textContent = formatarDataHora();
 
-        // Trocar tema conforme horário
         definirTemaDiaNoite();
 
-        // Alternar telas
+        // === INTERFACE ===
         title.classList.add("hidden-elements");
         form.classList.add("hidden-elements");
         message.textContent = "";
         result.classList.remove("hidden");
     } catch (error) {
-        console.error(error);
+        console.error("Erro ao buscar dados:", error);
         showMessage("Erro ao buscar dados. Verifique sua conexão.", true);
     }
 });
 
-// Botão para voltar à tela inicial
+// === BOTÃO VOLTAR ===
+
+/**
+ * Retorna à tela inicial do aplicativo, limpando os dados e restaurando o tema.
+ * @function handleHomeButton
+ */
 homeBtn.addEventListener("click", () => {
     result.classList.add("hidden");
     title.classList.remove("hidden-elements");
@@ -160,16 +205,5 @@ homeBtn.addEventListener("click", () => {
     definirTemaDiaNoite();
 });
 
-// === FUNÇÃO DE MENSAGENS ===
-function showMessage(text, isError = false) {
-    message.textContent = text;
-    if (text === "") {
-        message.classList.add("hidden");
-    } else {
-        message.classList.remove("hidden");
-        message.classList.toggle("error", isError);
-    }
-}
-
-// Aplicar tema ao carregar
+// === INICIALIZAÇÃO ===
 definirTemaDiaNoite();
