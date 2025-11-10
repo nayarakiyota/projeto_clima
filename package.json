@@ -1,0 +1,26 @@
+{
+  "name": "projeto_clima",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nayarakiyota/projeto_clima.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nayarakiyota/projeto_clima/issues"
+  },
+  "homepage": "https://github.com/nayarakiyota/projeto_clima#readme",
+  "devDependencies": {
+    "jest": "^30.2.0"
+  }
+}
