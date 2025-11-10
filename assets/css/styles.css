@@ -35,18 +35,30 @@ body {
     justify-content: center;
     align-items: center;
     background: linear-gradient(to bottom, var(--blue-light), var(--blue-lighter));
+    transition: background 0.8s ease;
+}
+
+/* === MODO DIA / NOITE === */
+body.day {
+    background: linear-gradient(to bottom, #9ddaf7, #d9f0ff);
+    color: var(--gray-title);
+}
+
+body.night {
+    background: linear-gradient(to bottom, #0f172a, #1e293b);
+    color: var(--white);
 }
 
 /* === CARD PRINCIPAL === */
 .card {
     background: var(--white);
-    padding: 40px 30px 15px 30px;
     border-radius: 18px;
     box-shadow: var(--shadow-md);
-    text-align: center;
+    padding: 40px 30px 15px 30px;
     width: 90%;
-    max-width: 420px;
-    transition: all 0.3s ease;
+    max-width: 480px;
+    text-align: center;
+    transition: all 0.4s ease;
 }
 
 /* === TÍTULO === */
@@ -99,27 +111,51 @@ h1 {
 /* === RESULTADO DO CLIMA === */
 .result {
     margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .result-card {
     background: var(--blue-lighter);
     border-radius: 14px;
-    padding: 24px 0 16px 0;
+    padding: 20px 0;
+    width: 90%;
+    margin: 0 auto 6px auto;
     box-shadow: var(--shadow-sm);
-    margin-bottom: 20px;
+    transition: all 0.3s ease;
 }
 
 .temp {
-    font-size: 3rem;
+    font-size: 2.8rem;
     font-weight: 600;
-    color: var(--gray-title)
+    color: var(--gray-title);
+}
+
+.temp i {
+    font-size: 2.4rem;
+    color: var(--blue-primary);
+    margin-right: 6px;
+    vertical-align: middle;
 }
 
 .city {
-    font-size: 1.5rem;
-    font-weight: 700;
+    font-size: 1.2rem;
+    font-weight: 600;
     color: var(--blue-dark);
-    margin-bottom: 10px;
+    margin-top: 8px;
+    margin-bottom: 4px;
+}
+
+#weather-description {
+    color: var(--gray-text);
+    font-size: 0.95rem;
+    margin: 4px 0;
+}
+
+#weather-date {
+    font-size: 0.85rem;
+    color: var(--gray-text);
 }
 
 /* === BOTÃO HOME === */
@@ -134,9 +170,8 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 15px auto 0 auto;
     transition: background-color 0.3s ease;
-    margin: 0 auto;
-    margin-top: 6px;
 }
 
 .home-btn:hover {
@@ -144,7 +179,7 @@ h1 {
 }
 
 .home-btn i {
-    font-size: 20px;
+    font-size: 18px;
     color: var(--white);
 }
 
@@ -169,5 +204,4 @@ h1 {
 
 .hidden-elements {
     display: none !important;
-    /* usado para esconder h1 e busca na tela de resultado */
 }
