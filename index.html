@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <!-- Servidores de Fontes do Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Fonte do Google - Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Padrão de caracteres -->
+    <meta charset="utf-8">
+
+    <!-- Layout Mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Meta Tags Essenciais -->
+    <meta name="author" content="Nayara Kiyota">
+    <meta name="description" content="Projeto Previsão do Tempo.">
+    <meta name="robots" content="index, follow">
+
+    <!-- Título da página -->
+    <title>Previsão do Tempo</title>
+
+    <!-- Link para arquivo CSS -->
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+
+</head>
+
+<body>
+    <div class="card">
+        <h1 id="title">Previsão do Tempo</h1>
+
+        <form id="search-form" class="search" autocomplete="off">
+            <input id="city-input" name="city" type="search" placeholder="Digite o nome da cidade" required />
+            <button id="search-btn" type="submit">Buscar</button>
+        </form>
+
+        <div id="result" class="result hidden">
+            <div class="result-card">
+                <div class="temp" id="temperature">--°</div>
+            </div>
+            <div class="city" id="city-name"></div>
+            <button class="home-btn" id="home-btn">
+                <i class="fa-solid fa-house"></i>
+            </button>
+        </div>
+
+        <div id="message" class="message"></div>
+    </div>
+
+    </main>
+
+    <script src="./assets/js/api.js"></script>
+</body>
+
+</html>
