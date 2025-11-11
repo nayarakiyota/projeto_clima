@@ -100,3 +100,26 @@ describe("Função buscarClimaPorCidade", () => {
         );
     });
 });
+
+test("Retorna previsão de 5 dias com dados válidos", async () => {
+    const mockGeo = { results: [{ latitude: -23.55, longitude: -46.63 }] };
+    const mockWeather = {
+        current_weather: { temperature: 25, weathercode: 2 },
+        daily: {
+            time: ["2025-11-02", "2025-11-03", "2025-11-04", "2025-11-05", "2025-11-06", "2025-11-07"],
+            temperature_2m_max: [26, 27, 28, 29, 30, 31],
+            temperature_2m_min: [18, 17, 19, 20, 18, 17],
+            weathercode: [2, 3, 45, 61, 95, 1],
+        },
+    };
+
+    fetch
+        .mockResolvedValueOnce({ ok: true, json: async () => mockGeo })
+        .mockResolvedValueOnce({ ok: true, json: async () => mockWeather });
+
+    const resultado = await buscarClimaPorCidade("São Paulo");
+    expect(resultado).toHaveProperty("daily");
+    expect(resultado.daily.temperature_2m_max).toHaveLength(6);
+});
+
+

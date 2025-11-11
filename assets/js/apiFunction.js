@@ -28,6 +28,7 @@ async function buscarClimaPorCidade(city) {
     return {
         temperatura: weatherData.current_weather.temperature,
         codigoClima: weatherData.current_weather.weathercode,
+        daily: weatherData.daily,
     };
 }
 
