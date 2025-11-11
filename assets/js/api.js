@@ -105,6 +105,29 @@ function showMessage(text, isError = false) {
     }
 }
 
+// ===== FUNÇÕES DE SEGURANÇA =====
+
+/**
+ * Sanitiza texto removendo caracteres potencialmente perigosos
+ * Protege contra XSS e injection attacks
+ * 
+ * @param {string} texto - Texto a ser sanitizado
+ * @returns {string} Texto limpo e seguro
+ * 
+ * @example
+ * sanitizarTexto('<script>alert("xss")</script>');
+ * // 'scriptalert(xss)/script'
+ */
+function sanitizarTexto(texto) {
+    if (!texto || typeof texto !== 'string') return '';
+
+    return texto
+        .replace(/[<>"'`]/g, '') // Remove caracteres perigosos HTML/JS
+        .replace(/[{}()[\]\\;]/g, '') // Remove caracteres de código
+        .trim()
+        .slice(0, MAX_TAMANHO_CIDADE); // Limita tamanho
+}
+
 /**
  * Renderiza a previsão para os próximos 5 dias.
  * Corrigido para alinhar o dia atual (current_weather.time) com daily.time.
@@ -265,3 +288,5 @@ homeBtn.addEventListener("click", () => {
 
 // === INICIALIZAÇÃO ===
 definirTemaDiaNoite();
+
+

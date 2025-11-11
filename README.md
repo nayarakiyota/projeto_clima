@@ -79,10 +79,39 @@ Durante o desenvolvimento, foram utilizados recursos de Inteligência Artificial
 - Sugestões de docstrings e documentação
 - Criação automatizada de testes unitários
 
+  ------
+
+## 🗝️Ética, Segurança & Privacidade
+
+Esta seção documenta práticas adotadas para garantir que o projeto **Projeto Clima** respeite princípios de privacidade, segurança e conformidade de licenças.
+
+### Objetivos
+- Garantir que o código e a documentação estejam claros, auditáveis e compatíveis com boas práticas.
+- Evitar armazenamento indevido de dados pessoais e minimizar o risco de exposição.
+- Garantir que dependências estejam devidamente licenciadas.
+
+###  Privacidade e tratamento de dados
+- **Não coletamos dados pessoais sensíveis.** O app consome dados públicos da API Open-Meteo e não armazena nomes, emails ou coordenadas persistentes do usuário.
+- **Sem terceiros desconhecidos:** não são enviadas informações para domínios de terceiros além dos serviços explicitamente usados (ex.: `api.open-meteo.com`).
+
+### Segurança na comunicação
+- Todas as chamadas à API devem ser feitas via `https`.
+- Tratar erros com mensagens genéricas para usuários (logs detalhados somente em ambiente de desenvolvimento).
+- Não inserir chaves secretas no front-end. (Open-Meteo não exige key; se usar outro serviço com key, mova a key para backend.)
+
+###  Auditoria de dependências e licenças
+- Lista as dependências e verifique compatibilidade de licenças antes de publicar.
+- Inclua um arquivo `LICENSE` no repositório e um `NOTICE.md` com atribuições.
+
+### Boas práticas de implementação
+- Evite salvar no `localStorage` dados sensíveis; prefira apenas flags de consentimento.
+- Não faça `console.log` de respostas de APIs em produção.
+- Valide e sanitize entradas do usuário (campo de busca) antes de enviar requisições.
+
 ------
 
 ## 🧑‍💻 Autora
 
 **Nayara Kiyota**
- Bootcamp Generation Brasil — PwC 2025
+ Bootcamp Generation Brasil 2025
  💻 Aplicação desenvolvida com apoio de IA para fins educacionais.

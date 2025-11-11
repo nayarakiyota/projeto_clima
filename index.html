@@ -16,6 +16,28 @@
     <!-- Padrão de caracteres -->
     <meta charset="utf-8">
 
+    <!-- ===== SECURITY HEADERS ===== -->
+    <!-- Content Security Policy - Proteção contra XSS e injeção de código -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline';
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+        font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:;
+        img-src 'self' data: https:;
+        connect-src 'self' https://geocoding-api.open-meteo.com https://api.open-meteo.com https://cdnjs.cloudflare.com;
+        base-uri 'self';
+        form-action 'self';
+    ">
+
+    <!-- Controle de referrer -->
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <!-- ===== PRECONNECT PARA PERFORMANCE ===== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://geocoding-api.open-meteo.com">
+    <link rel="preconnect" href="https://api.open-meteo.com">
+
     <!-- Layout Mobile -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -32,30 +54,45 @@
 
     <!-- Link para arquivo CSS -->
     <link rel="stylesheet" href="./assets/css/styles.css" />
-
 </head>
 
-<body>
-    <div class="card">
-        <h1 id="title">Previsão do Tempo</h1>
+<body class="day">
+    <div class="page-wrapper">
+        <div class="card">
+            <h1 id="title">Previsão do Tempo</h1>
 
-        <form id="search-form" class="search" autocomplete="off">
-            <input id="city-input" name="city" type="search" placeholder="Digite o nome da cidade" required />
-            <button id="search-btn" type="submit">Buscar</button>
-        </form>
+            <form id="search-form" class="search" autocomplete="off">
+                <input id="city-input" name="city" type="search" placeholder="Digite o nome da cidade" required />
+                <button id="search-btn" type="submit">Buscar</button>
+            </form>
 
-        <div id="result" class="result hidden">
-            <div class="result-card">
-                <div class="temp" id="temperature">--°</div>
+            <div id="result" class="result hidden">
+                <div class="result-card">
+                    <div class="temp" id="temperature">--°</div>
+                </div>
+                <div class="city" id="city-name"></div>
+                <button class="home-btn" id="home-btn">
+                    <i class="fa-solid fa-house"></i>
+                </button>
             </div>
-            <div class="city" id="city-name"></div>
-            <button class="home-btn" id="home-btn">
-                <i class="fa-solid fa-house"></i>
-            </button>
+
+            <div id="message" class="message"></div>
         </div>
 
-        <div id="message" class="message"></div>
+        <footer class="page-footer">
+            <p>
+                🔒 Esta aplicação não coleta, armazena ou compartilha dados pessoais.
+                As buscas são processadas em tempo real e não são registradas.
+            </p>
+            <p>
+                📊 Dados meteorológicos fornecidos por
+                <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo.com</a>
+                sob licença
+                <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>
+            </p>
+        </footer>
     </div>
+
     <script src="./assets/js/api.js"></script>
 </body>
 
