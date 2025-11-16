@@ -1,11 +1,12 @@
 <p align="center">
-  <img src="https://ik.imagekit.io/qiazjnea4/faviconclima.png?updatedAt=1762879649358" 
+  <img src="https://ik.imagekit.io/qiazjnea4/Gemini_Generated_Image_ej1fsgej1fsgej1f.png" 
        alt="Logo Previsão do Tempo" 
-       width="250" 
+       width="500" 
        style="border-radius: 12px;">
 </p>
 
-# Projeto Clima —Projeto Web Completo de Previsão do Tempo
+
+# Projeto Web Completo de Previsão do Tempo
 
 ## 📘 Descrição
 Aplicação que exibe o clima atual e previsão dos próximos dias de qualquer cidade do mundo, utilizando a **API Open-Meteo**.  
@@ -13,18 +14,25 @@ O projeto foi desenvolvido em **JavaScript puro**, **HTML** e **CSS**, com foco 
 
 ---
 
-## 🧠 Funcionalidades
--  Buscar cidades usando Geocoding
--  Exibir temperatura atual
--  Mostrar condições climáticas
--  Previsão dos próximos 5 dias
+- ## ✨ Funcionalidades
 
-- Exibição de ícones meteorológicos (via Weather Icons)
-- Interface dinâmica (dia, noite, sol, chuva, nublado)
-- Tratamento de erros e mensagens amigáveis ao usuário
-- Alternância automática de tema dia/noite
-- Testes automatizados com **Jest**
-- Documentação via **JSDoc**
+  🔍 Busca de cidades via **Geocoding API**
+
+  🌡️ Exibe temperatura atual
+
+  📝 Descrição detalhada do clima
+
+  📅 Previsão de **5 dias**
+
+  🌦️ Ícones personalizados (Weather Icons)
+
+  🌓 Tema **dinâmico** (dia/noite)
+
+  ⚠️ Tratamento de erros da API e entradas inválidas
+
+  🧪 Testes automatizados com **Jest**
+
+  📘 Documentação gerada com **JSDoc**
 
 ---
 
@@ -68,6 +76,7 @@ npm test
 
 ## 🧭 Estrutura do Projeto
 
+```
 📦 projeto-clima
  ┣ 📂 assets
  ┃ ┣ 📂 css
@@ -83,6 +92,9 @@ npm test
  ┣ 📜 NOTICE.md
  ┣ 📜 README.md
  ┗ 📜 package.json
+```
+
+
 
 ------
 
@@ -90,44 +102,48 @@ npm test
 
 Durante o desenvolvimento, foram utilizados recursos de Inteligência Artificial para:
 
-- Geração inicial de código base
-- Revisão de sintaxe e otimização de funções
-- Sugestões de docstrings e documentação
-- Criação automatizada de testes unitários
+✨ Revisão e melhoria de código
 
-  ------
+🔍 Depuração assistida
+
+🧪 Geração de testes automatizados
+
+📘 Documentação via JSDoc
+
+🛡️ Auditoria de segurança e privacidade
+
+⚖️ Análise de licenciamento
+
+------
 
 ## 🗝️Ética, Segurança & Privacidade
 
-Esta seção documenta práticas adotadas para garantir que o projeto **Projeto Clima** respeite princípios de privacidade, segurança e conformidade de licenças.
+- O projeto segue boas práticas de segurança:
 
-### Objetivos
-- Garantir que o código e a documentação estejam claros, auditáveis e compatíveis com boas práticas.
-- Evitar armazenamento indevido de dados pessoais e minimizar o risco de exposição.
-- Garantir que dependências estejam devidamente licenciadas.
+  ### **Tratamento de dados**
 
-###  Privacidade e tratamento de dados
-- **Não coletamos dados pessoais sensíveis.** O app consome dados públicos da API Open-Meteo e não armazena nomes, emails ou coordenadas persistentes do usuário.
-- **Sem terceiros desconhecidos:** não são enviadas informações para domínios de terceiros além dos serviços explicitamente usados (ex.: `api.open-meteo.com`).
+  - Nenhum dado pessoal é coletado ou armazenado
+  - Apenas dados **públicos**, fornecidos pela API Open-Meteo
+  - Nenhum dado é enviado para serviços externos além da API de clima
 
-### Segurança na comunicação
-- Todas as chamadas à API devem ser feitas via `https`.
-- Tratar erros com mensagens genéricas para usuários (logs detalhados somente em ambiente de desenvolvimento).
-- Não inserir chaves secretas no front-end. (Open-Meteo não exige key; se usar outro serviço com key, mova a key para backend.)
+  ### **Comunicação**
 
-###  Auditoria de dependências e licenças
-- Lista as dependências e verifique compatibilidade de licenças antes de publicar.
-- Inclua um arquivo `LICENSE` no repositório e um `NOTICE.md` com atribuições.
+  - Requisições realizadas via HTTPS
+  - Tratamento de erros, timeouts e respostas inesperadas
 
-### Boas práticas de implementação
-- Evite salvar no `localStorage` dados sensíveis; prefira apenas flags de consentimento.
-- Não faça `console.log` de respostas de APIs em produção.
-- Valide e sanitize entradas do usuário (campo de busca) antes de enviar requisições.
+  ### **Licenciamento**
+
+  - Dependências verificadas e documentadas
+  - Arquivos `LICENSE` e `NOTICE.md` incluídos conforme boas práticas
 
 ------
 
 ## 🧑‍💻 Autora
 
-**Nayara Kiyota**
- Bootcamp Generation Brasil 2025
- 💻 Aplicação desenvolvida com apoio de IA para fins educacionais.
+**Nayara Kiyota** 
+
+Bootcamp Generation Brasil 2025
+
+💻 Aplicação desenvolvida com apoio de IA para fins educacionais.
+
+<p align="center">   Feito com ☀️🌧️ e muito café 💙 </p> 
