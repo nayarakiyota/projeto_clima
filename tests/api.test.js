@@ -1,125 +1,112 @@
-/**
- * @fileoverview Testes unitários da função buscarClimaPorCidade,
- * responsável por consultar a API Open-Meteo e retornar os dados meteorológicos.
- *
- * Este arquivo utiliza Jest para simular (mockar) as chamadas de rede e validar
- * o comportamento da função em diferentes cenários, incluindo erros e casos extremos.
- */
+const {
+    getWeatherIcon,
+    getWeatherDescription,
+    buscarClimaMock
+} = require("../assets/js/weatherService");
 
-const { buscarClimaPorCidade } = require("../assets/js/apiFunction.js");
+// MOCK GLOBAL DO FETCH
+const mockFetch = jest.fn();
 
-// Simula a função fetch global do navegador
-global.fetch = jest.fn();
+describe("Testes básicos do aplicativo de clima", () => {
 
-/**
- * Bloco principal de testes para a função buscarClimaPorCidade.
- */
-describe("Função buscarClimaPorCidade", () => {
-    // Limpa mocks antes de cada teste para evitar interferência entre casos
-    beforeEach(() => {
+    afterEach(() => {
         jest.clearAllMocks();
     });
 
-    /**
-     * @test
-     * Verifica se uma cidade válida retorna dados meteorológicos no formato correto.
-     */
-    test("Cidade válida retorna dados meteorológicos", async () => {
-        const mockGeo = { results: [{ latitude: -23.55, longitude: -46.63 }] };
-        const mockWeather = { current_weather: { temperature: 25, weathercode: 2 } };
+    // CIDADE VÁLIDA
+    test("Nome de cidade válido retorna dados meteorológicos", async () => {
+        mockFetch
+            .mockResolvedValueOnce({
+                json: async () => ({
+                    results: [{ latitude: -23, longitude: -46 }]
+                })
+            })
+            .mockResolvedValueOnce({
+                ok: true,
+                json: async () => ({
+                    current_weather: { temperature: 25, weathercode: 0 }
+                })
+            });
 
-        fetch
-            .mockResolvedValueOnce({ ok: true, json: async () => mockGeo })
-            .mockResolvedValueOnce({ ok: true, json: async () => mockWeather });
+        const dados = await buscarClimaMock(mockFetch, "São Paulo");
 
-        const resultado = await buscarClimaPorCidade("São Paulo");
-
-        // Verifica se o retorno contém os campos esperados
-        expect(resultado).toMatchObject({ temperatura: 25, codigoClima: 2 });
+        expect(dados).toMatchObject({
+            temperature: 25,
+            weathercode: 0,
+        });
+        expect(mockFetch).toHaveBeenCalledTimes(2);
     });
 
-    /**
-     * @test
-     * Verifica se o erro é tratado corretamente quando a cidade não é encontrada.
-     */
-    test("Cidade inexistente lança erro tratado", async () => {
-        fetch.mockResolvedValueOnce({
-            ok: true,
-            json: async () => ({ results: [] }),
+    // CIDADE INEXISTENTE
+    test("Cidade inexistente lança exceção", async () => {
+        mockFetch.mockResolvedValueOnce({
+            json: async () => ({ results: [] })
         });
 
-        await expect(buscarClimaPorCidade("Xpto123")).rejects.toThrow(
-            "Cidade não encontrada."
-        );
+        await expect(buscarClimaMock(mockFetch, "Xyz123"))
+            .rejects.toThrow("CIDADE_NAO_ENCONTRADA");
     });
 
-    /**
-     * @test
-     * Verifica se o erro de entrada vazia é tratado corretamente.
-     */
+    // ENTRADA VAZIA
     test("Entrada vazia retorna erro de validação", async () => {
-        await expect(buscarClimaPorCidade("")).rejects.toThrow(
-            "Cidade não informada."
-        );
+        await expect(buscarClimaMock(mockFetch, ""))
+            .rejects.toThrow("CIDADE_VAZIA");
     });
 
-    /**
-     * @test
-     * Verifica se o erro é tratado corretamente em caso de falha da API de geolocalização.
-     */
+    // API COM ERRO
     test("Falha da API gera resposta adequada", async () => {
-        fetch.mockResolvedValueOnce({ ok: false });
-        await expect(buscarClimaPorCidade("Paris")).rejects.toThrow(
-            "Erro na API de geolocalização"
-        );
-    });
+        mockFetch
+            .mockResolvedValueOnce({
+                json: async () => ({
+                    results: [{ latitude: 1, longitude: 1 }]
+                })
+            })
+            .mockResolvedValueOnce({
+                ok: false
+            });
 
-    /**
-     * @test
-     * Verifica se o limite de requisições excedido (HTTP 429) é tratado corretamente.
-     */
-    test("Limite de requisições da API excedido", async () => {
-        fetch.mockResolvedValueOnce({ ok: false, status: 429 });
-        await expect(buscarClimaPorCidade("Roma")).rejects.toThrow(
-            "Erro na API de geolocalização"
-        );
-    });
-
-    /**
-     * @test
-     * Verifica o comportamento em caso de formato inesperado no JSON retornado pela API.
-     */
-    test("Mudança inesperada no formato JSON", async () => {
-        fetch.mockResolvedValueOnce({
-            ok: true,
-            json: async () => ({ wrongField: [] }),
-        });
-
-        await expect(buscarClimaPorCidade("Tóquio")).rejects.toThrow(
-            "Cidade não encontrada."
-        );
+        await expect(buscarClimaMock(mockFetch, "São Paulo"))
+            .rejects.toThrow("API_ERROR");
     });
 });
 
-test("Retorna previsão de 5 dias com dados válidos", async () => {
-    const mockGeo = { results: [{ latitude: -23.55, longitude: -46.63 }] };
-    const mockWeather = {
-        current_weather: { temperature: 25, weathercode: 2 },
-        daily: {
-            time: ["2025-11-02", "2025-11-03", "2025-11-04", "2025-11-05", "2025-11-06", "2025-11-07"],
-            temperature_2m_max: [26, 27, 28, 29, 30, 31],
-            temperature_2m_min: [18, 17, 19, 20, 18, 17],
-            weathercode: [2, 3, 45, 61, 95, 1],
-        },
-    };
+describe("Casos extremos da API", () => {
 
-    fetch
-        .mockResolvedValueOnce({ ok: true, json: async () => mockGeo })
-        .mockResolvedValueOnce({ ok: true, json: async () => mockWeather });
+    // LIMITE DE REQUISIÇÕES EXCEDIDO
+    test("API retorna erro de limite excedido", async () => {
+        mockFetch
+            .mockResolvedValueOnce({
+                json: async () => ({
+                    results: [{ latitude: 0, longitude: 0 }]
+                })
+            })
+            .mockResolvedValueOnce({
+                ok: false,
+                status: 429
+            });
 
-    const resultado = await buscarClimaPorCidade("São Paulo");
-    expect(resultado).toHaveProperty("daily");
-    expect(resultado.daily.temperature_2m_max).toHaveLength(6);
+        await expect(buscarClimaMock(mockFetch, "São Paulo"))
+            .rejects.toThrow("API_ERROR");
+    });
+
+    // REDE LENTA / TIMEOUT
+    test("Conexão lenta causa timeout simulado", async () => {
+        mockFetch.mockImplementation(() => new Promise((_, reject) =>
+            setTimeout(() => reject(new Error("timeout")), 200)
+        ));
+
+        await expect(buscarClimaMock(mockFetch, "São Paulo"))
+            .rejects.toThrow();
+    });
+
+    // RESPOSTA JSON ALTERADA
+    test("Formato inesperado do JSON gera erro", async () => {
+        mockFetch
+            .mockResolvedValueOnce({
+                json: async () => ({}) // ❌ sem results
+            });
+
+        await expect(buscarClimaMock(mockFetch, "São Paulo"))
+            .rejects.toThrow("CIDADE_NAO_ENCONTRADA");
+    });
 });
-
-

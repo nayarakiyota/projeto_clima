@@ -1,55 +1,77 @@
-# Atribuições e Créditos de Terceiros
+# NOTICE
 
-Este documento lista as atribuições, créditos e licenças de terceiros utilizadas no projeto **Projeto Clima**, desenvolvido por **Nayara Kiyota** durante o Bootcamp Generation Brasil (2025).
+Projeto: Previsão do Tempo  
+Autora: Nayara Kiyota  
+Ano: 2025
 
-O projeto utiliza apenas tecnologias, bibliotecas e serviços públicos, respeitando suas respectivas licenças e termos de uso.
+Este arquivo contém avisos de direitos autorais e atribuições obrigatórias
+relacionadas aos componentes de terceiros utilizados neste projeto.
 
----
 
-## 🖋️ Fontes
-- **Poppins** — Google Fonts  
-  - **Licença:** SIL Open Font License 1.1  
-  - **URL:** [https://fonts.google.com/specimen/Poppins](https://fonts.google.com/specimen/Poppins)
+------------------------------------------------------------
+1. Open-Meteo API
+------------------------------------------------------------
 
----
+Fonte dos dados: https://open-meteo.com/  
+Licença: Creative Commons Attribution 4.0 International (CC BY 4.0)  
+Requisito: Atribuição obrigatória ao usar, exibir ou redistribuir dados.  
+Atribuição exibida no footer da aplicação e reiterada neste documento.
 
-## 🌤️ Ícones
-- **Weather Icons** v2.0.12 — por Erik Flowers  
-  - **Licença:** SIL OFL 1.1 (fonte) + MIT License (CSS)  
-  - **URL:** [https://github.com/erikflowers/weather-icons](https://github.com/erikflowers/weather-icons)
-  - **Atribuição:** Ícones utilizados para representação de condições climáticas.
 
----
+------------------------------------------------------------
+2. Font Awesome
+------------------------------------------------------------
 
-## ☁️ APIs e Dados Meteorológicos
-- **Open-Meteo API**  
-  - **Licença:** Creative Commons Attribution 4.0 International (CC BY 4.0)  
-  - **URL:** [https://open-meteo.com/](https://open-meteo.com/)  
-  - **Atribuição:** Dados meteorológicos fornecidos por Open-Meteo.com.  
-  - **Observação:** Nenhum dado pessoal do usuário é coletado ou armazenado. O projeto apenas consome dados públicos.
+Website: https://fontawesome.com/  
+Licenças aplicáveis:
+- Icons: CC BY 4.0  
+- Fonts: SIL Open Font License 1.1  
+- Code (JS/CSS): MIT License
 
----
+Este projeto utiliza ícones da biblioteca Font Awesome conforme permitido
+pelas licenças acima.
 
-## 🌐 Infraestrutura e Recursos Externos
-- **Cloudflare CDN**  
-  - Utilizado para entrega e cache de arquivos estáticos (ex.: bibliotecas de CSS/JS).  
-  - **URL:** [https://cdnjs.cloudflare.com/](https://cdnjs.cloudflare.com/)
 
----
+------------------------------------------------------------
+3. Weather Icons (Erik Flowers)
+------------------------------------------------------------
 
-## ⚖️ Licenciamento Geral do Projeto
-Este projeto é distribuído sob a **Licença MIT**.  
-Consulte o arquivo [`LICENSE`](./LICENSE) para mais detalhes sobre direitos e permissões de uso.
+Website: https://erikflowers.github.io/weather-icons/  
+Licença: SIL Open Font License (OFL 1.1)
 
----
+Utilizado para exibição de ícones de clima. Atribuição reconhecida conforme
+a exigência de distribuição.
 
-## 📜 Observações Finais
-- Este documento deve ser mantido atualizado sempre que novas bibliotecas, APIs ou serviços forem adicionados.  
-- O uso de todos os recursos segue as boas práticas 
-- de conformidade, segurança e ética no desenvolvimento de software.  
-- Nenhuma coleta, rastreamento ou armazenamento de informações pessoais é realizada.
 
-  ---
+------------------------------------------------------------
+4. Google Fonts – Poppins
+------------------------------------------------------------
 
-  © 2025 — **Nayara Kiyota**  
-  Bootcamp Generation Brasil | Projeto Clima ☀️
+Fonte: https://fonts.google.com/specimen/Poppins  
+Licença: SIL Open Font License (OFL 1.1)
+
+A fonte é de uso gratuito, incluindo contextos comerciais, com permissão
+para embed e redistribuição conforme a licença OFL.
+
+
+------------------------------------------------------------
+5. Outros Créditos
+------------------------------------------------------------
+
+- Bibliotecas JavaScript/Node utilizadas para desenvolvimento e testes
+  seguem suas respectivas licenças, conforme listado pelo comando:
+  
+  npx license-checker --production --json
+
+- Este NOTICE deve ser incluído em qualquer redistribuição do software,
+  conforme exigido pelas licenças mencionadas.
+
+
+------------------------------------------------------------
+Aviso Complementar
+------------------------------------------------------------
+
+Este software inclui dados de terceiros que permanecem protegidos por suas
+licenças originais. A desenvolvedora reconhece e respeita tais condições.
+
+Este arquivo não substitui o arquivo LICENSE do projeto.

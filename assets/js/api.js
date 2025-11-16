@@ -1,12 +1,20 @@
 /**
- * @fileoverview Script responsável por buscar e exibir informações meteorológicas
- * utilizando a API Open-Meteo, com base na cidade informada pelo usuário.
+ * @fileoverview Sistema de Previsão do Tempo.
+ * @description 
+ * Gerencia a busca, tratamento e exibição de dados climáticos utilizando
+ * as APIs Open-Meteo (Geocoding + Forecast). Controla sanitização da entrada,
+ * troca de temas, renderização de clima atual e previsão dos próximos dias.
  *
- * Corrigido para sincronizar corretamente o dia atual da API (current_weather)
- * com o array daily.time, evitando duplicação da data de hoje nos “Próximos dias”.
+ * Interface e estilização originais foram preservadas, apenas reorganizadas
+ * conforme boas práticas de clean code.
+ *
+ * @author 
+ *   Nayara Kiyota
  */
 
-// === SELETORES DO DOM ===
+// ============================================================================
+//  SELEÇÃO DE ELEMENTOS DO DOM
+// ============================================================================
 const form = document.getElementById("search-form");
 const input = document.getElementById("city-input");
 const result = document.getElementById("result");
@@ -16,7 +24,7 @@ const cityNameEl = document.getElementById("city-name");
 const homeBtn = document.getElementById("home-btn");
 const title = document.getElementById("title");
 
-// === ELEMENTOS DINÂMICOS ===
+// Elementos criados dinamicamente
 const weatherDescEl = document.createElement("p");
 const dateEl = document.createElement("p");
 const forecastContainer = document.createElement("div");
@@ -26,27 +34,48 @@ dateEl.id = "weather-date";
 forecastContainer.id = "forecast-container";
 forecastContainer.classList.add("forecast");
 
+// Inserção na interface
 cityNameEl.insertAdjacentElement("afterend", weatherDescEl);
 weatherDescEl.insertAdjacentElement("afterend", dateEl);
 dateEl.insertAdjacentElement("afterend", forecastContainer);
 
-// === FUNÇÕES AUXILIARES ===
 
-/** Retorna a data atual formatada em português */
+// ============================================================================
+//  FUNÇÕES UTILITÁRIAS
+// ============================================================================
+
+/**
+ * Formata a data atual para o padrão pt-BR com nome do dia da semana.
+ *
+ * @function formatarDataHora
+ * @returns {string} Data completa formatada.
+ *
+ * @example
+ * formatarDataHora();
+ * // "segunda-feira, 18 de novembro de 2024"
+ */
 function formatarDataHora() {
-    const agora = new Date();
-    const opcoes = {
+    return new Date().toLocaleDateString("pt-BR", {
         weekday: "long",
         day: "numeric",
         month: "long",
         year: "numeric",
-    };
-    return agora.toLocaleDateString("pt-BR", opcoes);
+    });
 }
 
-/** Retorna a classe de ícone do clima */
+/**
+ * Retorna a classe CSS referente ao ícone da biblioteca Weather Icons
+ * conforme o código meteorológico da Open-Meteo.
+ *
+ * @function getWeatherIcon
+ * @param {number} code - Código numérico do clima.
+ * @returns {string} Classe do ícone.
+ *
+ * @example
+ * getWeatherIcon(0); // "wi-day-sunny"
+ */
 function getWeatherIcon(code) {
-    const map = {
+    const icons = {
         0: "wi-day-sunny",
         1: "wi-day-sunny-overcast",
         2: "wi-day-cloudy",
@@ -61,12 +90,22 @@ function getWeatherIcon(code) {
         80: "wi-showers",
         95: "wi-thunderstorm",
     };
-    return map[code] || "wi-na";
+    return icons[code] || "wi-na";
 }
 
-/** Retorna a descrição textual do clima */
+/**
+ * Converte o código meteorológico em uma descrição textual amigável.
+ *
+ * @function getWeatherDescription
+ * @param {number} code - Código do clima.
+ * @returns {string} Descrição do clima.
+ *
+ * @example
+ * getWeatherDescription(3); 
+ * // "Encoberto"
+ */
 function getWeatherDescription(code) {
-    const map = {
+    const descriptions = {
         0: "Céu limpo",
         1: "Parcialmente nublado",
         2: "Nublado",
@@ -81,93 +120,116 @@ function getWeatherDescription(code) {
         80: "Pancadas de chuva",
         95: "Trovoadas",
     };
-    return map[code] || "Tempo desconhecido";
+    return descriptions[code] || "Tempo desconhecido";
 }
 
-/** Define o tema (dia/noite) */
+/**
+ * Aplica tema visual dinâmico (dia ou noite) com base no horário local.
+ *
+ * @function definirTemaDiaNoite
+ * @returns {void}
+ *
+ * @example
+ * definirTemaDiaNoite();
+ */
 function definirTemaDiaNoite() {
     const hora = new Date().getHours();
     const body = document.body;
+
     const isNight = hora >= 18 || hora < 6;
     body.style.background = isNight
         ? "linear-gradient(to bottom, #0f172a, #1e293b)"
         : "linear-gradient(to bottom, #9ddaf7, #d9f0ff)";
 }
 
-/** Exibe mensagens (erro ou status) */
+/**
+ * Exibe mensagens informativas ou de erro para o usuário.
+ *
+ * @function showMessage
+ * @param {string} text - Texto exibido.
+ * @param {boolean} [isError=false] - Define se é mensagem de erro.
+ * @returns {void}
+ *
+ * @example
+ * showMessage("Buscando...");
+ */
 function showMessage(text, isError = false) {
     message.textContent = text;
+
     if (!text) {
         message.classList.add("hidden");
-    } else {
-        message.classList.remove("hidden");
-        message.classList.toggle("error", isError);
+        return;
     }
+
+    message.classList.remove("hidden");
+    message.classList.toggle("error", isError);
 }
 
-// ===== FUNÇÕES DE SEGURANÇA =====
-
 /**
- * Sanitiza texto removendo caracteres potencialmente perigosos
- * Protege contra XSS e injection attacks
- * 
- * @param {string} texto - Texto a ser sanitizado
- * @returns {string} Texto limpo e seguro
- * 
+ * Sanitiza texto para evitar ataques XSS removendo caracteres perigosos.
+ *
+ * @function sanitizarTexto
+ * @param {string} texto - Texto fornecido pelo usuário.
+ * @returns {string} Texto sanitizado e seguro.
+ *
+ * @throws {TypeError} Se o texto não for string.
+ *
  * @example
- * sanitizarTexto('<script>alert("xss")</script>');
- * // 'scriptalert(xss)/script'
+ * sanitizarTexto("<script>alert(1)</script>");
+ * // "alert1"
  */
 function sanitizarTexto(texto) {
-    if (!texto || typeof texto !== 'string') return '';
+    if (!texto || typeof texto !== "string") return "";
 
     return texto
-        .replace(/[<>"'`]/g, '') // Remove caracteres perigosos HTML/JS
-        .replace(/[{}()[\]\\;]/g, '') // Remove caracteres de código
-        .trim()
-        .slice(0, MAX_TAMANHO_CIDADE); // Limita tamanho
+        .replace(/[<>"'`]/g, "")
+        .replace(/[{}()[\]\\;]/g, "")
+        .trim();
 }
 
+
+// ============================================================================
+//  PREVISÃO DOS PRÓXIMOS 5 DIAS
+// ============================================================================
+
 /**
- * Renderiza a previsão para os próximos 5 dias.
- * Corrigido para alinhar o dia atual (current_weather.time) com daily.time.
+ * Renderiza dinamicamente a previsão dos próximos 5 dias após a data atual.
+ *
+ * @function renderForecast
+ * @param {Object} forecast - Objeto "daily" retornado pela API Open-Meteo.
+ * @param {string} currentWeatherDate - Data atual em formato ISO.
+ * @returns {void}
+ *
+ * @example
+ * renderForecast(api.daily, api.current_weather.time);
  */
 function renderForecast(forecast, currentWeatherDate) {
     forecastContainer.innerHTML = "";
 
-    if (!forecast || !forecast.time || !forecast.temperature_2m_max) {
-        console.warn("Dados de previsão inválidos:", forecast);
-        return;
-    }
+    if (!forecast?.time) return;
 
-    // Título
     const titulo = document.createElement("h3");
     titulo.textContent = "Próximos Dias";
     titulo.classList.add("forecast-title");
     forecastContainer.appendChild(titulo);
 
-    // === Alinha o índice com a data real do current_weather ===
-    // Exemplo: currentWeatherDate = "2025-11-11T02:00"
     const currentDate = currentWeatherDate.split("T")[0];
     let todayIndex = forecast.time.indexOf(currentDate);
-
-    // Se não encontrar a data exata, assume o índice 0 (segurança)
     if (todayIndex === -1) todayIndex = 0;
 
-    // Começa no próximo dia após o índice atual
     const startIndex = todayIndex + 1;
-    const diasParaMostrar = 5;
+    const total = 5;
 
-    for (let i = startIndex; i < startIndex + diasParaMostrar; i++) {
+    for (let i = startIndex; i < startIndex + total; i++) {
         if (!forecast.time[i]) break;
 
-        const dia = forecast.time[i];
+        const dataISO = forecast.time[i];
         const tempMax = Math.round(forecast.temperature_2m_max[i]);
         const tempMin = Math.round(forecast.temperature_2m_min[i]);
         const code = forecast.weathercode[i];
         const desc = getWeatherDescription(code);
 
-        const data = new Date(dia);
+        const data = new Date(dataISO);
         const nomeDia = data.toLocaleDateString("pt-BR", { weekday: "long" });
         const dataFormatada = data.toLocaleDateString("pt-BR", {
             day: "numeric",
@@ -176,6 +238,7 @@ function renderForecast(forecast, currentWeatherDate) {
 
         const card = document.createElement("div");
         card.classList.add("forecast-day");
+
         card.innerHTML = `
             <div class="forecast-info">
                 <p class="forecast-day-name">
@@ -183,24 +246,49 @@ function renderForecast(forecast, currentWeatherDate) {
                 </p>
                 <span class="forecast-date">${dataFormatada}</span>
             </div>
+
             <div class="forecast-icon-temp">
                 <i class="wi ${getWeatherIcon(code)}"></i>
                 <div class="forecast-desc">${desc}</div>
             </div>
+
             <div class="forecast-temps">
-                <span class="max"><i class="wi wi-direction-up"></i> ${tempMax}°</span>
-                <span class="min"><i class="wi wi-direction-down"></i> ${tempMin}°</span>
+                <span class="max">
+                    <i class="wi wi-direction-up"></i> ${tempMax}°
+                </span>
+                <span class="min">
+                    <i class="wi wi-direction-down"></i> ${tempMin}°
+                </span>
             </div>
         `;
+
         forecastContainer.appendChild(card);
     }
 }
 
-// === EVENTO PRINCIPAL DE BUSCA ===
+
+// ============================================================================
+//  BUSCA PRINCIPAL — EVENTO DO FORMULÁRIO
+// ============================================================================
+
+/**
+ * Evento principal de busca do clima.
+ * Sanitiza entrada, consulta a API de geolocalização, consulta dados
+ * meteorológicos, aplica o tema visual e renderiza os resultados.
+ *
+ * @event form#submit
+ * @async
+ * @param {SubmitEvent} e - Evento de envio.
+ *
+ * @throws {Error} Se APIs retornarem erro ou estiverem indisponíveis.
+ *
+ * @example
+ * form.dispatchEvent(new Event("submit"));
+ */
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const city = input.value.trim();
 
+    const city = sanitizarTexto(input.value.trim());
     if (!city) return showMessage("Por favor, digite o nome de uma cidade.", true);
 
     showMessage("Buscando...");
@@ -208,11 +296,14 @@ form.addEventListener("submit", async (e) => {
     forecastContainer.innerHTML = "";
 
     try {
-        // === GEOLOCALIZAÇÃO ===
+        // ---------------- GEOLOCALIZAÇÃO ----------------
         const geoResp = await fetch(
-            `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=pt&format=json`
+            `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(
+                city
+            )}&count=1&language=pt&format=json`
         );
-        if (!geoResp.ok) throw new Error("Erro na requisição de localização.");
+
+        if (!geoResp.ok) throw new Error("Erro ao buscar localização.");
 
         const geoData = await geoResp.json();
         if (!geoData.results?.length)
@@ -220,33 +311,33 @@ form.addEventListener("submit", async (e) => {
 
         const { latitude, longitude, name, country } = geoData.results[0];
 
-        // === CLIMA ATUAL + PREVISÃO ===
+        // ---------------- CLIMA + PREVISÃO ----------------
         const weatherResp = await fetch(
             `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=auto`
         );
+
         if (!weatherResp.ok) throw new Error("Erro ao obter dados meteorológicos.");
 
         const weatherData = await weatherResp.json();
         const weather = weatherData.current_weather;
         const forecast = weatherData.daily;
 
-        if (!weather) return showMessage("Dados meteorológicos indisponíveis.", true);
+        if (!weather) return showMessage("Dados indisponíveis.", true);
 
-        // === EXIBIÇÃO ===
+        // ---------------- EXIBIÇÃO ----------------
         const tempAtual = Math.round(weather.temperature);
-
         tempEl.innerHTML = `<i class="wi ${getWeatherIcon(weather.weathercode)}"></i> ${tempAtual}°`;
-
 
         cityNameEl.textContent = `${name}, ${country}`;
         weatherDescEl.textContent = getWeatherDescription(weather.weathercode);
         dateEl.textContent = formatarDataHora();
 
+        // ---------------- TEMA DINÂMICO ----------------
         document.body.classList.remove("sunny", "cloudy", "rainy", "night");
 
-        const code = weather.weathercode;
         const hora = new Date().getHours();
         const isNight = hora >= 18 || hora < 6;
+        const code = weather.weathercode;
 
         if (isNight) {
             document.body.classList.add("night");
@@ -258,35 +349,74 @@ form.addEventListener("submit", async (e) => {
             document.body.classList.add("sunny");
         }
 
-
-        // === PREVISÃO (com sincronização) ===
+        // ---------------- PREVISÃO ----------------
         renderForecast(forecast, weather.time);
 
         definirTemaDiaNoite();
 
-        // === INTERFACE ===
+        // ---------------- INTERFACE ----------------
         title.classList.remove("hidden-elements");
         form.classList.add("hidden-elements");
         message.textContent = "";
         result.classList.remove("hidden");
+
     } catch (error) {
-        console.error("Erro ao buscar dados:", error);
+        console.error(error);
         showMessage("Erro ao buscar dados. Verifique sua conexão.", true);
     }
 });
 
-// === BOTÃO VOLTAR ===
+
+// ============================================================================
+//  BOTÃO "VOLTAR"
+// ============================================================================
+
+/**
+ * Evento responsável por restaurar a tela inicial,
+ * limpar dados e reativar o tema adequado.
+ *
+ * @event homeBtn#click
+ * @returns {void}
+ *
+ * @example
+ * homeBtn.click();
+ */
 homeBtn.addEventListener("click", () => {
     result.classList.add("hidden");
     title.classList.remove("hidden-elements");
     form.classList.remove("hidden-elements");
+
     input.value = "";
-    showMessage("");
     forecastContainer.innerHTML = "";
+    showMessage("");
     definirTemaDiaNoite();
 });
 
-// === INICIALIZAÇÃO ===
+
+// ============================================================================
+//  INICIALIZAÇÃO AUTOMÁTICA
+// ============================================================================
+
+/**
+ * Inicializa o tema visual assim que o script é carregado.
+ *
+ * @example
+ * definirTemaDiaNoite();
+ */
 definirTemaDiaNoite();
 
 
+
+
+// ============================================================================
+//  EXPORTS PARA TESTES (NÃO afeta o navegador)
+// ============================================================================
+
+if (typeof module !== "undefined") {
+    module.exports = {
+        getWeatherDescription,
+        getWeatherIcon,
+        sanitizarTexto,
+        formatarDataHora,
+    };
+}

@@ -1,14 +1,26 @@
-# 🌤️ Projeto Clima — Aplicativo de Previsão do Tempo
+<p align="center">
+  <img src="https://ik.imagekit.io/qiazjnea4/faviconclima.png?updatedAt=1762879649358" 
+       alt="Logo Previsão do Tempo" 
+       width="250" 
+       style="border-radius: 12px;">
+</p>
+
+# Projeto Clima —Projeto Web Completo de Previsão do Tempo
 
 ## 📘 Descrição
-Aplicação simples e responsiva que exibe a previsão do tempo atual de qualquer cidade do mundo, utilizando a **API Open-Meteo**.  
+Aplicação que exibe o clima atual e previsão dos próximos dias de qualquer cidade do mundo, utilizando a **API Open-Meteo**.  
 O projeto foi desenvolvido em **JavaScript puro**, **HTML** e **CSS**, com foco em **clareza, boas práticas e integração com IA** para otimização do desenvolvimento.
 
 ---
 
 ## 🧠 Funcionalidades
-- Consulta de cidade com retorno de temperatura e descrição do clima
+-  Buscar cidades usando Geocoding
+-  Exibir temperatura atual
+-  Mostrar condições climáticas
+-  Previsão dos próximos 5 dias
+
 - Exibição de ícones meteorológicos (via Weather Icons)
+- Interface dinâmica (dia, noite, sol, chuva, nublado)
 - Tratamento de erros e mensagens amigáveis ao usuário
 - Alternância automática de tema dia/noite
 - Testes automatizados com **Jest**
@@ -56,17 +68,21 @@ npm test
 
 ## 🧭 Estrutura do Projeto
 
-projeto_clima/
-├── assets/
-│   ├── css/
-│   │   └── styles.css
-│   ├── js/
-│   │   ├── api.js
-│   │   └── apiFunction.js
-├── tests/
-│   └── api.test.js
-├── index.html
-└── README.md
+📦 projeto-clima
+ ┣ 📂 assets
+ ┃ ┣ 📂 css
+ ┃ ┃ ┗ 📜 styles.css
+ ┃ ┣ 📂 js
+ ┃ ┃ ┣ 📜 api.js
+ ┃ ┃ ┗ 📜 weatherService.js  (para testes)
+ ┃ ┗ 📂 images
+ ┣ 📂 tests
+ ┃ ┗ 📜 api.test.js
+ ┣ 📜 index.html
+ ┣ 📜 LICENSE
+ ┣ 📜 NOTICE.md
+ ┣ 📜 README.md
+ ┗ 📜 package.json
 
 ------
 

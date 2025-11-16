@@ -2,22 +2,14 @@
 <html lang="pt-BR">
 
 <head>
-    <!-- Servidores de Fontes do Google -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <!-- Fonte do Google - Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-
-    <!-- Fontes de Ícones -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons.min.css">
-
-    <!-- Padrão de caracteres -->
+    <!-- ==================== CONFIGURAÇÕES BÁSICAS ==================== -->
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Nayara Kiyota">
+    <meta name="description" content="Projeto Previsão do Tempo">
+    <meta name="robots" content="index, follow">
 
-    <!-- ===== SECURITY HEADERS ===== -->
-    <!-- Content Security Policy - Proteção contra XSS e injeção de código -->
+    <!-- Segurança -->
     <meta http-equiv="Content-Security-Policy" content="
         default-src 'self';
         script-src 'self' 'unsafe-inline';
@@ -28,49 +20,52 @@
         base-uri 'self';
         form-action 'self';
     ">
-
-    <!-- Controle de referrer -->
     <meta name="referrer" content="strict-origin-when-cross-origin">
 
-    <!-- ===== PRECONNECT PARA PERFORMANCE ===== -->
+    <!-- Google Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons.min.css">
+
+    <!-- API Preconnect -->
     <link rel="preconnect" href="https://geocoding-api.open-meteo.com">
     <link rel="preconnect" href="https://api.open-meteo.com">
 
-    <!-- Layout Mobile -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Meta Tags Essenciais -->
-    <meta name="author" content="Nayara Kiyota">
-    <meta name="description" content="Projeto Previsão do Tempo.">
-    <meta name="robots" content="index, follow">
-
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="https://ik.imagekit.io/qiazjnea4/faviconclima.png?updatedAt=1762879645981">
+    <link rel="icon" type="image/png" href="https://ik.imagekit.io/qiazjnea4/faviconclima.png">
 
-    <!-- Título da página -->
+    <!-- CSS -->
+    <link rel="stylesheet" href="./assets/css/styles.css">
+
     <title>Previsão do Tempo</title>
-
-    <!-- Link para arquivo CSS -->
-    <link rel="stylesheet" href="./assets/css/styles.css" />
 </head>
 
-<body class="day">
+<body class="day page-home">
+
+    <!-- CONTAINER PRINCIPAL -->
     <div class="page-wrapper">
+
+        <!-- CARD PRINCIPAL -->
         <div class="card">
             <h1 id="title">Previsão do Tempo</h1>
 
+            <!-- FORMULÁRIO DE BUSCA -->
             <form id="search-form" class="search" autocomplete="off">
                 <input id="city-input" name="city" type="search" placeholder="Digite o nome da cidade" required />
                 <button id="search-btn" type="submit">Buscar</button>
             </form>
 
+            <!-- RESULTADO -->
             <div id="result" class="result hidden">
                 <div class="result-card">
                     <div class="temp" id="temperature">--°</div>
                 </div>
+
                 <div class="city" id="city-name"></div>
+
                 <button class="home-btn" id="home-btn">
                     <i class="fa-solid fa-house"></i>
                 </button>
@@ -78,20 +73,19 @@
 
             <div id="message" class="message"></div>
         </div>
-
-        <footer class="page-footer">
-            <p>
-                🔒 Esta aplicação não coleta, armazena ou compartilha dados pessoais.
-                As buscas são processadas em tempo real e não são registradas.
-            </p>
-            <p>
-                📊 Dados meteorológicos fornecidos por
-                <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo.com</a>
-                sob licença
-                <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>
-            </p>
-        </footer>
     </div>
+
+    <!-- FOOTER FORA DO WRAPPER -->
+    <footer class="page-footer">
+        <p>🔒 Esta aplicação não coleta, armazena ou compartilha dados pessoais. As buscas são processadas em tempo real
+            e não são registradas.</p>
+        <p>
+            📊 Dados meteorológicos fornecidas por
+            <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>
+            — Licença
+            <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>
+        </p>
+    </footer>
 
     <script src="./assets/js/api.js"></script>
 </body>
