@@ -14,7 +14,7 @@ O projeto foi desenvolvido em **JavaScript puro**, **HTML** e **CSS**, com foco 
 
 ---
 
-- ## ✨ Funcionalidades
+## ✨ Funcionalidades
 
   🔍 Busca de cidades via **Geocoding API**
 
@@ -118,23 +118,23 @@ Durante o desenvolvimento, foram utilizados recursos de Inteligência Artificial
 
 ## 🗝️Ética, Segurança & Privacidade
 
-- O projeto segue boas práticas de segurança:
+O projeto segue boas práticas de segurança:
 
-  ### **Tratamento de dados**
+### **Tratamento de dados**
 
-  - Nenhum dado pessoal é coletado ou armazenado
-  - Apenas dados **públicos**, fornecidos pela API Open-Meteo
-  - Nenhum dado é enviado para serviços externos além da API de clima
+- Nenhum dado pessoal é coletado ou armazenado
+- Apenas dados **públicos**, fornecidos pela API Open-Meteo
+- Nenhum dado é enviado para serviços externos além da API de clima
 
-  ### **Comunicação**
+### **Comunicação**
 
-  - Requisições realizadas via HTTPS
-  - Tratamento de erros, timeouts e respostas inesperadas
+- Requisições realizadas via HTTPS
+- Tratamento de erros, timeouts e respostas inesperadas
 
-  ### **Licenciamento**
+### **Licenciamento**
 
-  - Dependências verificadas e documentadas
-  - Arquivos `LICENSE` e `NOTICE.md` incluídos conforme boas práticas
+- Dependências verificadas e documentadas
+- Arquivos `LICENSE` e `NOTICE.md` incluídos conforme boas práticas
 
 ------
 
@@ -145,5 +145,6 @@ Durante o desenvolvimento, foram utilizados recursos de Inteligência Artificial
 Bootcamp Generation Brasil 2025
 
 💻 Aplicação desenvolvida com apoio de IA para fins educacionais.
+
 
 <p align="center">   Feito com ☀️🌧️ e muito café 💙 </p> 
