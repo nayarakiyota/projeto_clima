@@ -14,7 +14,7 @@ O projeto foi desenvolvido em **JavaScript puro**, **HTML** e **CSS**, com foco 
 
 ---
 
-- ## ✨ Funcionalidades
+## ✨ Funcionalidades
 
   🔍 Busca de cidades via **Geocoding API**
 
