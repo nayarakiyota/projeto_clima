@@ -125,6 +125,7 @@ function getWeatherDescription(code) {
 
 /**
  * Aplica tema visual dinâmico (dia ou noite) com base no horário local.
+ * AGORA TAMBÉM GERENCIA AS CLASSES CSS CORRETAMENTE.
  *
  * @function definirTemaDiaNoite
  * @returns {void}
@@ -137,9 +138,18 @@ function definirTemaDiaNoite() {
     const body = document.body;
 
     const isNight = hora >= 18 || hora < 6;
-    body.style.background = isNight
-        ? "linear-gradient(to bottom, #0f172a, #1e293b)"
-        : "linear-gradient(to bottom, #9ddaf7, #d9f0ff)";
+
+    if (isNight) {
+        // Adiciona a classe 'night' e remove a 'day'
+        body.classList.add("night");
+        body.classList.remove("day");
+        body.style.background = "linear-gradient(to bottom, #0f172a, #1e293b)";
+    } else {
+        // Adiciona a classe 'day' e remove a 'night'
+        body.classList.add("day");
+        body.classList.remove("night");
+        body.style.background = "linear-gradient(to bottom, #9ddaf7, #d9f0ff)";
+    }
 }
 
 /**
@@ -385,6 +395,8 @@ homeBtn.addEventListener("click", () => {
     result.classList.add("hidden");
     title.classList.remove("hidden-elements");
     form.classList.remove("hidden-elements");
+
+    document.body.classList.remove("sunny", "cloudy", "rainy", "night");
 
     input.value = "";
     forecastContainer.innerHTML = "";
